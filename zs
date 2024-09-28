@@ -47,10 +47,10 @@ function zs_install_pkgs() {
     +-----------------------------------------------------------+
     "
     sudo apt-get install \
-    wget curl dig nano htop atop \
+    wget curl nano htop atop \
     zip unzip p7zip iperf3 stow nmap \
     tcpdump netcat-openbsd mtr sed jq \
-    lnav sipcalc ipcalc inetutils-* -y
+    lnav sipcalc ipcalc inetutils-* dig -y
 }
 
 function zs_install_apps () {
