@@ -114,7 +114,7 @@ echo -e "
     +-----------------------------------------------------------+
     "
     wget https://download.virtualbox.org/virtualbox/7.1.2/virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb
-    sudo apt-get virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb -y
+    sudo apt-get install virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb -y
     rm -rf virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb
 }
 
