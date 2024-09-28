@@ -40,10 +40,23 @@ GREEN="\033[97;102m"
 RED="\033[97;41m"
 ENDCOLOR="\e[0m"
 
+function zs_install_pkgs() {
+    echo -e "
+    +-----------------------------------------------------------+
+    |${MAGENTA}Installing Pakcages${ENDCOLOR}
+    +-----------------------------------------------------------+
+    "
+    sudo apt-get install \
+    wget curl dig nano htop atop \
+    zip unzip p7zip iperf3 stow nmap \
+    tcpdump netcat-openbsd mtr sed jq \
+    lnav sipcalc ipcalc inetutils-* -y
+}
+
 function zs_install_apps () {
     echo -e "
     +-----------------------------------------------------------+
-    |${GREEN}Installing ZorinOS Apps${ENDCOLOR}
+    |${MAGENTA}Installing ZorinOS Apps${ENDCOLOR}
     +-----------------------------------------------------------+
     "
     sudo snap install code --classic
@@ -119,6 +132,7 @@ echo -e "
 }
 
 function zs_install_all() {
+    zs_install_pkgs
     zs_install_apps
     zs_install_docker_desktop
     zs_install_virtualbox
@@ -127,6 +141,7 @@ function zs_install_all() {
 # <-- Manual - BEGIN
 manual() {
     echo -e "Parameters:
+    --install-pkgs                 Install Packages
     --install-apps                 Install Apps
     --install-docker-desktop       Install Docker Desktop
     --install-docker-virtualbox    Install VirtualBox
@@ -140,6 +155,9 @@ manual() {
 if [[ $1 == "-h" || $1 == "--help" || $1 == "--h" ]]; then
     manual
     exit 1
+elif [[ $1 == "--install-pkgs" ]]; then
+    zs_install_pkgs
+    exit 0
 elif [[ $1 == "--install-apps" ]]; then
     zs_install_apps
     exit 0
@@ -155,23 +173,27 @@ elif [[ $1 == "--install-all" ]]; then
 fi
 
 echo "Choose an option:"
-echo "1. Install Apps"
-echo "2. Install Docker Desktop"
-echo "3. Install VirtualBox"
-echo "4. Install All"
+echo "1. Install Pakcages ()"
+echo "2. Install Apps"
+echo "3. Install Docker Desktop"
+echo "4. Install VirtualBox"
+echo "5. Install All"
 read option
 
 case $option in
     1)
+        zs_install_pkgs
+        ;;
+    2)
         zs_install_apps
         ;;
-    2)  
+    3)  
         zs_install_docker_desktop
         ;;
-    3)
+    4)
         zs_install_virtualbox
         ;;
-    4)
+    5)
         zs_install_all
         ;;
     *)
