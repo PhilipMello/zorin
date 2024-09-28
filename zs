@@ -171,7 +171,7 @@ case $option in
     3)
         zs_install_virtualbox
         ;;
-    3)
+    4)
         zs_install_all
         ;;
     *)
