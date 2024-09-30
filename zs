@@ -50,7 +50,7 @@ function zs_install_pkgs() {
     wget curl nano htop atop \
     zip unzip p7zip iperf3 stow nmap \
     tcpdump netcat-openbsd mtr sed jq \
-    lnav sipcalc ipcalc inetutils-* dig -y
+    lnav sipcalc ipcalc inetutils-* net-tools -y
 }
 
 function zs_install_apps () {
@@ -157,19 +157,19 @@ if [[ $1 == "-h" || $1 == "--help" || $1 == "--h" ]]; then
     exit 1
 elif [[ $1 == "--install-pkgs" ]]; then
     zs_install_pkgs
-    exit 0
+    [ $? -eq 0 ] && echo "<--packages installed successfully-->" && exit $?
 elif [[ $1 == "--install-apps" ]]; then
     zs_install_apps
-    exit 0
+    [ $? -eq 0 ] && echo "<--apps installed successfully-->" && exit $?
 elif [[ $1 == "--install-docker-desktop" ]]; then
     zs_install_docker_desktop
-    exit 0
+    [ $? -eq 0 ] && echo "<--docker-desktop installed successfully-->" && exit $?
 elif [[ $1 == "--install-virtualbox" ]]; then
     zs_install_virtualbox
-    exit 0
+    [ $? -eq 0 ] && echo "<--virtualbox installed successfully-->" && exit $?
 elif [[ $1 == "--install-all" ]]; then
     zs_install_all
-    exit 0
+    [ $? -eq 0 ] && echo "<--all apps and pakcages installed successfully-->" && exit $?
 fi
 
 echo "Choose an option:"
