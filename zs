@@ -50,7 +50,9 @@ function zs_install_pkgs() {
     wget curl nano htop atop \
     zip unzip p7zip iperf3 stow nmap \
     tcpdump netcat-openbsd mtr sed jq \
-    lnav sipcalc ipcalc inetutils-* net-tools -y
+    lnav sipcalc ipcalc inetutils-* net-tools \
+    namp libmpv1 libxcb-xinerama0 libxcb-cursor0 libnss3 \
+    apache2-utils -y
 }
 
 function zs_install_apps () {
