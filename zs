@@ -52,7 +52,8 @@ function zs_install_pkgs() {
     tcpdump netcat-openbsd mtr sed jq \
     lnav sipcalc ipcalc inetutils-* net-tools \
     namp libmpv1 libxcb-xinerama0 libxcb-cursor0 libnss3 \
-    apache2-utils -y
+    apache2-utils \
+    rar unrar -y
 }
 
 function zs_install_apps () {
@@ -67,58 +68,68 @@ function zs_install_apps () {
     sudo snap install android-studio --classic
     sudo snap install brave
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    sudo dpkg -i google-chrome-stable_current_amd64.deb
+    sudo apt-get install ./google-chrome-stable_current_amd64.deb
     rm -rf google-chrome-stable_current_amd64.deb
-    sudo apt-get install cpu-x -y
-    sudo apt-get install gtkhash -y
+    sudo apt-get install cpu-x
+    sudo apt-get install gtkhash
     sudo snap install whatsie
     sudo snap install postman
+
+    sudo apt-get install ./discord-*.deb
+    rm -rf discord-*.deb
+
+    sudo apt-get install ./microsoft-edge-stable_*.deb
+    rm -rf microsoft-edge-stable_*.deb
+
+    # https://docs.ankiweb.net/platform/linux/installing.html
+    sudo apt install libxcb-xinerama0 libxcb-cursor0 libnss3
+    tar xaf Downloads/anki-2XXX-linux-qt6.tar.zst
+    cd anki-2XXX-linux-qt6
+    sudo ./install.sh
+    cd
+    rm -rf anki-2XXX-linux-qt6
+}
+
+function zs_install_docker_cli() {
+    # https://github.com/docker/docker-install
+
+    echo -e "
+    +-----------------------------------------------------------+
+    |${MAGENTA}Installing Docker CLI${ENDCOLOR}
+    +-----------------------------------------------------------+
+    " 
+    curl -sSL https://get.docker.com/ | CHANNEL=stable sh
+    sudo systemctl enable --now docker
+
+    [ $? -eq 0 ] && echo -e "
+    +-------------------------------------------------------+
+    |${GREEN}Docker CLI installed successfully${ENDCOLOR}
+    +-------------------------------------------------------+
+    " && exit $?
 }
 
 function zs_install_docker_desktop() {
 # Install Docker Desktop on Linux
 # https://docs.docker.com/desktop/install/linux/
+# https://docs.docker.com/desktop/release-notes/
 
 # Install using the apt repository
 echo -e "
     +-----------------------------------------------------------+
-    |${MAGENTA}Installing Docker Desktop${ENDCOLOR}
+    |${MAGENTA}Installing Docker Desktop & CLI${ENDCOLOR}
     +-----------------------------------------------------------+
-    "   
-# Add Docker's official GPG key:
-sudo apt-get update -y
-sudo apt-get install ca-certificates curl -y
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+    "
+    curl -sSL https://get.docker.com/ | CHANNEL=stable sh
+    sudo systemctl enable --now docker
+    sudo apt install gnome-terminal -y
+    sudo apt-get install docker-desktop -y
 
-echo -e "
-    +----------------------------------------------------------------------------+
-    |${MAGENTA}Add the repository to Apt sources:${ENDCOLOR}
-    |'https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository'
-    +-----------------------------------------------------------------------------+
-    "  
-# Add the repository to Apt sources:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  sudo apt-get update -y
-  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
-echo -e "
-    +----------------------------------------------------------------------------+
-    |${MAGENTA}Installing Docker Desktop on Ubuntu${ENDCOLOR}
-    |'https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository'
-    +-----------------------------------------------------------------------------+
-    "  
-# Install Docker Desktop on Ubuntu
-echo "
-'https://docs.docker.com/desktop/install/linux/ubuntu/#install-docker-desktop'
-"
-sudo apt install gnome-terminal -y
-sudo apt-get install ./docker-desktop-amd64.deb -y
-sudo rm -rf docker-desktop-amd64.deb
+    which docker > /dev/null 2>&1
+        [ $? -eq 0 ] && echo -e "
+        +-------------------------------------------------------+
+        |${GREEN}Docker Desktop & CLI installed successfully${ENDCOLOR}
+        +-------------------------------------------------------+
+        " && exit $?
 }
 
 function zs_install_virtualbox() {
