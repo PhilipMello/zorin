@@ -46,6 +46,7 @@ function zs_install_pkgs() {
     |${MAGENTA}Installing Pakcages${ENDCOLOR}
     +-----------------------------------------------------------+
     "
+    sudo apt-get update -y \
     sudo apt-get install \
     wget curl nano htop atop \
     zip unzip p7zip iperf3 stow nmap \
@@ -56,12 +57,13 @@ function zs_install_pkgs() {
     rar unrar -y
 }
 
-function zs_install_apps () {
+function zs_install_apps() {
     echo -e "
     +-----------------------------------------------------------+
     |${MAGENTA}Installing ZorinOS Apps${ENDCOLOR}
     +-----------------------------------------------------------+
     "
+    sudo apt-get update -y \
     sudo snap install code --classic
     sudo snap install code sublime-text --classic
     sudo snap install gtkhash
@@ -75,11 +77,13 @@ function zs_install_apps () {
     sudo snap install whatsie
     sudo snap install postman
 
-    sudo apt-get install ./discord-*.deb
-    rm -rf discord-*.deb
+    wget https://stable.dl2.discordapp.net/apps/linux/0.0.72/discord-0.0.72.deb -P ~/Downloads
+    sudo apt-get install ~/Downloads/./discord-*.deb
+    rm -rf ~/Downloads/discord-*.deb
 
+    wget https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_129.0.2792.79-1_amd64.deb -P ~/Downloads
     sudo apt-get install ./microsoft-edge-stable_*.deb
-    rm -rf microsoft-edge-stable_*.deb
+    rm -rf ~/Downloads/microsoft-edge-stable_*.deb
 
     # https://docs.ankiweb.net/platform/linux/installing.html
     sudo apt install libxcb-xinerama0 libxcb-cursor0 libnss3
