@@ -10,13 +10,13 @@
 # 🔧 ZS
 # For Linux 🐧
 ```
-wget https://raw.githubusercontent.com/PhilipMello/post-installation/main/zs && chmod +x zs
+wget https://github.com/PhilipMello/zorin/raw/refs/heads/main/zs && chmod +x zs
 ```
 
 OR
 
 ```
-wget https://raw.githubusercontent.com/PhilipMello/post-installation/main/zs && chmod +x zs && sudo mv zs /usr/bin/
+wget https://github.com/PhilipMello/zorin/raw/refs/heads/main/zs && chmod +x zs && sudo mv zs /usr/bin/
 ```
 
 RUN:
