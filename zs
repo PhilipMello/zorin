@@ -46,13 +46,13 @@ function zs_install_pkgs() {
     |${MAGENTA}Installing Pakcages${ENDCOLOR}
     +-----------------------------------------------------------+
     "
-    sudo apt-get update -y \
+    sudo apt-get update -y
     sudo apt-get install \
     wget curl nano htop atop \
     zip unzip p7zip iperf3 stow nmap \
     tcpdump netcat-openbsd mtr sed jq \
     lnav sipcalc ipcalc inetutils-* net-tools \
-    namp libmpv1 libxcb-xinerama0 libxcb-cursor0 libnss3 \
+    nmap libmpv1 libxcb-xinerama0 libxcb-cursor0 libnss3 \
     apache2-utils \
     rar unrar -y
 }
@@ -63,35 +63,35 @@ function zs_install_apps() {
     |${MAGENTA}Installing ZorinOS Apps${ENDCOLOR}
     +-----------------------------------------------------------+
     "
-    sudo apt-get update -y \
+    sudo apt-get update -y
     sudo snap install code --classic
     sudo snap install code sublime-text --classic
     sudo snap install gtkhash
     sudo snap install android-studio --classic
     sudo snap install brave
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    sudo apt-get install ./google-chrome-stable_current_amd64.deb
-    rm -rf google-chrome-stable_current_amd64.deb
     sudo apt-get install cpu-x
     sudo apt-get install gtkhash
     sudo snap install whatsie
     sudo snap install postman
+
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P ~/Downloads
+    sudo apt-get install ~/Downloads/./google-chrome-stable_current_amd64.deb
+    rm -rf ~/Downloads/google-chrome-stable_*.deb
 
     wget https://stable.dl2.discordapp.net/apps/linux/0.0.72/discord-0.0.72.deb -P ~/Downloads
     sudo apt-get install ~/Downloads/./discord-*.deb
     rm -rf ~/Downloads/discord-*.deb
 
     wget https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_129.0.2792.79-1_amd64.deb -P ~/Downloads
-    sudo apt-get install ./microsoft-edge-stable_*.deb
+    sudo apt-get install ~/Downloads/./microsoft-edge-stable_*.deb
     rm -rf ~/Downloads/microsoft-edge-stable_*.deb
 
     # https://docs.ankiweb.net/platform/linux/installing.html
-    sudo apt install libxcb-xinerama0 libxcb-cursor0 libnss3
-    tar xaf Downloads/anki-2XXX-linux-qt6.tar.zst
-    cd anki-2XXX-linux-qt6
-    sudo ./install.sh
-    cd
-    rm -rf anki-2XXX-linux-qt6
+    sudo apt install libxcb-xinerama0 libxcb-cursor0 libnss3 -y
+    wget https://github.com/ankitects/anki/releases/download/24.06.3/anki-24.06.3-linux-qt6.tar.zst -P ~/Downloads
+    tar xaf ~/Downloads/anki-2XXX-linux-qt6.tar.zst
+    sudo ~/Downloads/anki-2XXX-linux-qt6/./install.sh
+    rm -rf ~/Downloads/anki-2XXX-linux-qt6/
 }
 
 function zs_install_docker_cli() {
@@ -113,20 +113,58 @@ function zs_install_docker_cli() {
 }
 
 function zs_install_docker_desktop() {
-# Install Docker Desktop on Linux
-# https://docs.docker.com/desktop/install/linux/
-# https://docs.docker.com/desktop/release-notes/
+    # Install Docker Desktop on Linux
+    # https://docs.docker.com/desktop/install/linux/
 
-# Install using the apt repository
-echo -e "
+    # Install using the apt repository
+    echo -e "
     +-----------------------------------------------------------+
-    |${MAGENTA}Installing Docker Desktop & CLI${ENDCOLOR}
+    |${MAGENTA}Installing Docker Desktop${ENDCOLOR}
     +-----------------------------------------------------------+
+    "   
+    # Add Docker's official GPG key:
+    sudo apt-get update -y
+    sudo apt-get install ca-certificates curl -y
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    echo -e "
+    +----------------------------------------------------------------------------+
+    |${MAGENTA}Add the repository to Apt sources:${ENDCOLOR}
+    |'https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository'
+    +-----------------------------------------------------------------------------+
+    "  
+    # Add the repository to Apt sources:
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update -y
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+    echo -e "
+    +----------------------------------------------------------------------------+
+    |${MAGENTA}Installing Docker Desktop on Ubuntu${ENDCOLOR}
+    |'https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository'
+    +-----------------------------------------------------------------------------+
+    "  
+    # Install Docker Desktop on Ubuntu
+    # https://docs.docker.com/desktop/release-notes/
+    echo "
+    'https://docs.docker.com/desktop/install/linux/ubuntu/#install-docker-desktop'
     "
-    curl -sSL https://get.docker.com/ | CHANNEL=stable sh
-    sudo systemctl enable --now docker
     sudo apt install gnome-terminal -y
-    sudo apt-get install docker-desktop -y
+    sudo apt-get install docker-desktop
+
+    # Post install
+    # https://docs.docker.com/engine/install/linux-postinstall/
+    sudo groupadd docker
+    sudo usermod -aG docker,root $USER
+    newgrp docker,root
+    sudo systemctl enable --now docker.service
+    sudo systemctl enable --now containerd.service
+
 
     which docker > /dev/null 2>&1
         [ $? -eq 0 ] && echo -e "
@@ -143,9 +181,9 @@ echo -e "
     |${MAGENTA}Installing Oracle VirtualBox on Ubuntu${ENDCOLOR}
     +-----------------------------------------------------------+
     "
-    wget https://download.virtualbox.org/virtualbox/7.1.2/virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb
-    sudo apt-get install ./virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb -y
-    rm -rf virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb
+    wget https://download.virtualbox.org/virtualbox/7.1.2/virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb -P ~/Downloads
+    sudo apt-get install -P ~/Downloads/./virtualbox-7.1_7.1.2-164945~Ubuntu~jammy_amd64.deb -y
+    rm -rf -P ~/Downloads/virtualbox-*.deb
 }
 
 function zs_install_all() {
@@ -190,7 +228,7 @@ elif [[ $1 == "--install-all" ]]; then
 fi
 
 echo "Choose an option:"
-echo "1. Install Pakcages ()"
+echo "1. Install Pakcages (wget curl nano htop atop)"
 echo "2. Install Apps"
 echo "3. Install Docker Desktop"
 echo "4. Install VirtualBox"
