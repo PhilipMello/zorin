@@ -49,12 +49,13 @@ function zs_install_pkgs() {
     sudo apt-get update -y
     sudo apt-get install \
     wget curl nano htop atop \
-    zip unzip p7zip iperf3 stow nmap \
+    zip unzip p7zip stow nmap \
     tcpdump netcat-openbsd mtr sed jq \
     lnav sipcalc ipcalc inetutils-* net-tools \
-    nmap libmpv1 libxcb-xinerama0 libxcb-cursor0 libnss3 \
+    libmpv1 libxcb-xinerama0 libxcb-cursor0 libnss3 \
     apache2-utils \
-    rar unrar -y
+    rar unrar \
+    iperf3  -y
 }
 
 function zs_install_apps() {
